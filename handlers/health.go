@@ -14,8 +14,8 @@ type HealthStatus struct {
 
 func Health(w http.ResponseWriter, r *http.Request) {
 	response := HealthStatus{
-		Status:    "Ok",
-		Service:   "sucessful",
+		Status:    "sucessful",
+		Service:   "Processing",
 		TimeStamp: time.Now().Format(time.RFC1123),
 	}
 
@@ -24,6 +24,7 @@ func Health(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, http.StatusText(http.StatusInternalServerError), http.StatusInternalServerError)
 		return
 	}
+
 	w.Header().Set("Content-Type", "application/json")
 	w.Write(jsodata)
 }

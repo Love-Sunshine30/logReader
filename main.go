@@ -17,6 +17,7 @@ func main() {
 		return
 	}
 
+	// router
 	router := httprouter.New()
 
 	router.HandlerFunc(http.MethodGet, "/health", handlers.Health)

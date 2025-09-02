@@ -1,6 +1,7 @@
 package models
 
 import (
+	"fmt"
 	"time"
 )
 
@@ -23,4 +24,31 @@ type LogEntry struct {
 	Service   string    `json:"service"`
 	Message   string    `json:"message"`
 	CreatedAt time.Time `json:"created_at"`
+}
+
+func InsertUpload(upload_id, filename string, filesize int64) error {
+	query := `
+	INSERT INTO uploads(upload_id, filename, file_size, status)
+	VALUES($1, $2, $3, 'processing')
+	RETURNING id
+	`
+	var id int
+	err := DB.QueryRow(query, upload_id, filename, filesize).Scan(&id)
+	if err != nil {
+		return fmt.Errorf("failed to insert upload: %v", err)
+	}
+	fmt.Println("upload inserted sucessfully!")
+	return nil
+}
+
+func InsertLogEntry(upload_id, timestamp, level, service, message string) error {
+	query := `
+	INSERT INTO log_entries(upload_id, timestamp, level, service, message)
+	VALUES($1, $2, $3, $4, $5) 
+	`
+	_, err := DB.Exec(query, upload_id, timestamp, level, service, message)
+	if err != nil {
+		return fmt.Errorf("failed to insert log entries")
+	}
+	return nil
 }
