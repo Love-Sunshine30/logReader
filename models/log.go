@@ -26,6 +26,15 @@ type LogEntry struct {
 	CreatedAt time.Time `json:"created_at"`
 }
 
+// updates status for uploaded file after reading the file
+func UpdateUploadStatus(uploadid, status string) error {
+	_, err := DB.Exec(`UPDATE uploads SET status=$2 WHERE upload_id=$1`, uploadid, status)
+	if err != nil {
+		return fmt.Errorf("failed to update status: %v", err)
+	}
+	return nil
+}
+
 func InsertUpload(upload_id, filename string, filesize int64) error {
 	query := `
 	INSERT INTO uploads(upload_id, filename, file_size, status)
