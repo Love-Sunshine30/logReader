@@ -38,6 +38,18 @@ jobs:
     - name: Install dependencies
       run: go mod download
 
+    - name: Initialize database schema
+      run: |
+        # Wait for database to be ready
+        sleep 10
+        
+        # Install PostgreSQL client
+        sudo apt-get update
+        sudo apt-get install -y postgresql-client
+        
+        # Run the init.sql script
+        PGPASSWORD=password123 psql -h localhost -U postgres -d log_reader -f init.sql
+
     - name: Run tests
       run: go test -v ./...
       env:
