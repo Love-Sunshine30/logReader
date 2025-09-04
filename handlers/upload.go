@@ -30,6 +30,10 @@ type LogLine struct {
 	Message   string `json:"message"`
 }
 
+// count for how many line was valid and invalid
+var Valid = 0
+var Failed = 0
+
 // helpers
 // generates id for log lifes
 func generateId() string {
@@ -78,10 +82,6 @@ func Upload(w http.ResponseWriter, r *http.Request) {
 	scanner := bufio.NewScanner(file)
 	scanner.Buffer(make([]byte, 0, 64*1024), 10*1024*1024)
 
-	// count for how many line was valid and invalid
-	valid := 0
-	failed := 0
-
 	// scan each line and insert into log_entries table
 	for scanner.Scan() {
 		line := scanner.Bytes()
@@ -92,7 +92,7 @@ func Upload(w http.ResponseWriter, r *http.Request) {
 
 		var ll LogLine
 		if err := json.Unmarshal(line, &ll); err != nil {
-			failed++
+			Failed++
 			continue
 		}
 
@@ -101,9 +101,9 @@ func Upload(w http.ResponseWriter, r *http.Request) {
 			if err != nil {
 				http.Error(w, "Error inserting log line", http.StatusInternalServerError)
 			}
-			valid++
+			Valid++
 		} else {
-			failed++
+			Failed++
 		}
 	}
 
@@ -114,7 +114,7 @@ func Upload(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	if failed > 10 && failed > valid/4 {
+	if Failed > 10 && Failed > Valid/4 {
 		_ = models.UpdateUploadStatus(uploadid, "failed")
 	} else {
 		_ = models.UpdateUploadStatus(uploadid, "completed")
@@ -131,7 +131,6 @@ func Upload(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "Json marshaling error", http.StatusInternalServerError)
 		return
 	}
-
 	w.Header().Set("Content-Type", "application/json")
 	w.Write(jsondata)
 }

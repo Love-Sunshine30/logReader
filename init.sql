@@ -30,6 +30,3 @@ CREATE INDEX IF NOT EXISTS idx_log_entries_level ON log_entries(level);
 CREATE INDEX IF NOT EXISTS idx_log_entries_service ON log_entries(service);
 CREATE INDEX IF NOT EXISTS idx_log_entries_created_at ON log_entries(created_at);
 
--- Insert some sample data for testing (optional)
--- INSERT INTO uploads (upload_id, filename, file_size, status) VALUES 
--- ('sample_001', 'sample.log', 1024, 'completed');

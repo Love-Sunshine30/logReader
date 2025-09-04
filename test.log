@@ -1,3 +1,5 @@
 {"timestamp":"2025-09-01T12:00:00Z","level":"INFO","service":"web","message":"server started"}
 {"timestamp":"2025-09-01T12:01:00Z","level":"ERROR","service":"auth","message":"login failed for user X"}
 {"timestamp":"2025-09-01T12:02:30Z","level":"WARN","service":"payments","message":"retrying charge"}
+{"timestamp":"2025-09-01T12:02:30Z","level":"WARN","service":"payments","message":"retrying charge"}
+{"timestamp":"2025-09-01T12:02:30Z","level":"WARN","service":"payments","message":"retrying charge"}
